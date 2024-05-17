@@ -1,38 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+package org.rec.exp11sms
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#6159B3"
-        android:text="SEND SMS" />
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.telephony.SmsManager
+import android.widget.Button
+import android.widget.EditText
+import androidx.core.app.ActivityCompat
 
-    <EditText
-        android:id="@+id/etPhoneNumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter Phone Number"
-        android:inputType="textPersonName" />
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-    <EditText
-        android:id="@+id/etMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter the Message"
-        android:inputType="textPersonName" />
+        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.SEND_SMS), 101)
+        }
+        val etPhoneNumber : EditText = findViewById(R.id.etPhoneNumber)
+        val etMessage : EditText = findViewById(R.id.etMessage)
+        val btSend : Button = findViewById(R.id.btSend)
 
-    <Button
-        android:id="@+id/btSend"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SEND" />
-</LinearLayout>
+        btSend.setOnClickListener {
+            val phoneNumber = etPhoneNumber.text.toString()
+            val message = etMessage.text.toString()
+            val smsManager = SmsManager.getDefault()
+            smsManager.sendTextMessage(phoneNumber,null,message, null, null)
+
+         }
+
+        
+
+    }
+}
